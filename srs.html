@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero Hunger · SRS & Implementation Blueprint</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            /* Premium Modern SaaS Light Theme */
+            --bg: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --card-hover-border: #cbd5e1;
+            
+            --text: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #f1f5f9;
+            
+            --accent: #4f46e5;
+            --accent-hover: #3730a3;
+            --accent-glow: rgba(79, 70, 229, 0.08);
+            --accent-soft: #f5f3ff;
+            
+            --cyan: #06b6d4;
+            --cyan-soft: #ecfeff;
+            
+            --green: #10b981;
+            --green-glow: rgba(16, 185, 129, 0.08);
+            --green-soft: #ecfdf5;
+            
+            --amber: #d97706;
+            --amber-soft: #fffbeb;
+            --amber-border: #fde68a;
+            
+            --red: #dc2626;
+            --red-soft: #fef2f2;
+            
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation styling */
+        .sidebar {
+            width: 300px;
+            min-width: 300px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--card-border);
+            padding: 36px 24px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent) 0%, #06b6d4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .brand-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text) 30%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: auto;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .sidebar-nav a.active {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            border-radius: 2px;
+            background: var(--accent);
+        }
+
+        /* Header / Search Controls */
+        .top-navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(248, 250, 252, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px dashed var(--card-border);
+            padding: 18px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 9;
+            width: 100%;
+        }
+
+        .search-container {
+            position: relative;
+            width: 360px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 10px 16px 10px 42px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* Main structure */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 300px);
+        }
+
+        .main-content {
+            padding: 48px;
+            max-width: 1040px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 48px;
+            border-bottom: 1px dashed var(--card-border);
+            padding-bottom: 32px;
+        }
+
+        .doc-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(79, 70, 229, 0.15);
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.25;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* General section styles */
+        section {
+            margin-bottom: 64px;
+            scroll-margin-top: 100px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        .section-icon {
+            color: var(--accent);
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 0.975rem;
+            margin-bottom: 20px;
+            line-height: 1.65;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        /* Highlight Search target */
+        .search-highlight-effect {
+            animation: highlight-pulse 2s ease-out;
+        }
+
+        @keyframes highlight-pulse {
+            0% { box-shadow: 0 0 0 5px var(--accent); border-color: var(--accent); }
+            100% { box-shadow: var(--shadow); border-color: var(--card-border); }
+        }
+
+        /* Overview Details Grid */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .overview-box h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+
+        .overview-box p {
+            font-size: 0.925rem;
+            margin-bottom: 0;
+        }
+
+        /* Tech Stack Badges Grid */
+        .tech-stack-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .tech-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .tech-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tech-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .tech-card-header i {
+            color: var(--accent);
+        }
+
+        .tech-badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tech-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+        }
+
+        /* Interactive Architecture Visualizer */
+        .arch-nodes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .arch-node {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .arch-node:hover {
+            transform: translateY(-2px);
+            border-color: var(--card-hover-border);
+        }
+
+        .arch-node.active {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .arch-node-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg);
+            margin: 0 auto 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--accent);
+            border: 1px solid var(--card-border);
+        }
+
+        .arch-node.active .arch-node-logo {
+            background: var(--card-bg);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .arch-node h4 {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .arch-node p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .arch-details-box {
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 16px;
+            min-height: 140px;
+            animation: fade-in 0.3s ease;
+        }
+
+        .arch-details-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .arch-details-content {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Flow Diagrams CSS */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 24px 32px;
+            margin-top: 12px;
+            overflow-x: auto;
+        }
+
+        .flow-step {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: var(--shadow);
+            z-index: 2;
+        }
+
+        .flow-step h5 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .flow-step p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            min-width: 40px;
+            z-index: 1;
+        }
+
+        /* Functional Modules cards styling */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.25s;
+        }
+
+        .module-card:hover {
+            border-color: var(--card-hover-border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .module-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .module-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .module-card-title i {
+            color: var(--accent);
+        }
+
+        .module-card-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .module-card.expanded .module-card-arrow {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .module-card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .module-card.expanded .module-card-content {
+            max-height: 1000px;
+            transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+            border-top: 1px dashed var(--card-border);
+            padding-top: 14px;
+            margin-top: 12px;
+        }
+
+        .module-list {
+            margin-left: 20px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .module-list li {
+            margin-bottom: 2px;
+        }
+
+        /* Interactive API Explorer Layout */
+        .api-explorer-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .api-routes-menu {
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .api-menu-group-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .api-routes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .api-route-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .api-route-item:hover {
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        .api-route-item.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .api-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            width: 48px;
+            text-align: center;
+        }
+
+        .api-badge.get { background: var(--cyan-soft); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.15); }
+        .api-badge.post { background: var(--green-soft); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.15); }
+        .api-badge.put { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(217, 119, 6, 0.15); }
+        .api-badge.delete { background: var(--red-soft); color: var(--red); border: 1px solid rgba(220, 38, 38, 0.15); }
+
+        /* API Terminal Sandbox */
+        .api-terminal {
+            background: #090c15;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .api-terminal-header {
+            background: #0f1322;
+            padding: 12px 20px;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .terminal-title-text {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .api-terminal-body {
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #f8fafc;
+            overflow-y: auto;
+            max-height: 480px;
+        }
+
+        .terminal-meta-row {
+            border-bottom: 1px dashed #1e293b;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+
+        .terminal-heading {
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .terminal-code-block {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid #1e293b;
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin-bottom: 16px;
+            color: #38bdf8;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        /* Interactive Database ER Schemas */
+        .db-tab-container {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .db-tab-btn {
+            background: none;
+            border: none;
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .db-tab-btn:hover {
+            color: var(--accent);
+            background: var(--bg);
+        }
+
+        .db-tab-btn.active {
+            color: #ffffff;
+            background: var(--accent);
+            box-shadow: 0 4px 10px var(--accent-glow);
+        }
+
+        .db-schema-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            animation: fade-in 0.3s ease;
+        }
+
+        .schema-table-container {
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .schema-table th, .schema-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .schema-table th {
+            background: var(--bg);
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .schema-table td {
+            color: var(--text-secondary);
+        }
+
+        .schema-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .schema-code-preview {
+            background: #090c15;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            overflow-x: auto;
+            color: #38bdf8;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: pre;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Interactive Folder Explorer */
+        .tree-container {
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .tree-node {
+            margin-left: 20px;
+            position: relative;
+        }
+
+        .tree-node-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .tree-node-title:hover {
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--accent);
+        }
+
+        .tree-node-title.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .tree-icon {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .tree-node-title.active .tree-icon {
+            color: var(--accent);
+        }
+
+        .tree-children {
+            display: none;
+            border-left: 1px dashed var(--card-border);
+            margin-left: 8px;
+            padding-left: 8px;
+        }
+
+        .tree-node.expanded > .tree-children {
+            display: block;
+        }
+
+        .tree-desc-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            font-size: 0.9rem;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tree-desc-header {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+        }
+
+        /* Roadmap Checklist Tracking */
+        .roadmap-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            margin-top: 16px;
+        }
+
+        .roadmap-phase-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .roadmap-phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 4px;
+            background: var(--card-border);
+            border-radius: 2px 0 0 2px;
+            transition: background 0.3s;
+        }
+
+        .roadmap-phase-card.completed::before {
+            background: var(--green);
+        }
+
+        .phase-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .roadmap-phase-card.completed .phase-number {
+            background: var(--green-soft);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .phase-info {
+            flex: 1;
+        }
+
+        .phase-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .phase-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .phase-badge.pending { background: var(--bg); color: var(--text-muted); border: 1px solid var(--card-border); }
+        .phase-badge.completed { background: var(--green-soft); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.15); }
+
+        .phase-checklist {
+            list-style: none;
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            border-top: 1px dashed var(--card-border);
+            padding-top: 14px;
+        }
+
+        .phase-checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .phase-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s;
+        }
+
+        .phase-checkbox:checked {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .phase-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px; left: 2px;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .phase-checklist-item.checked span {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        /* UX Design Guidelines modules */
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .guide-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .guide-box-icon {
+            color: var(--accent);
+            background: var(--accent-soft);
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .guide-box h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .guide-box p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        /* Responsive Layouts */
+        @media (max-width: 1200px) {
+            .api-explorer-grid {
+                grid-template-columns: 1fr;
+            }
+            .db-schema-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                min-width: unset;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+                padding: 20px 24px;
+            }
+            .sidebar-nav {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .sidebar-nav a.active::before {
+                display: none;
+            }
+            .top-navbar {
+                padding: 12px 20px;
+            }
+            .search-container {
+                width: 100%;
+            }
+            .workspace {
+                width: 100%;
+            }
+            .main-content {
+                padding: 24px 20px;
+            }
+            .overview-grid, .tech-stack-container, .modules-grid, .guidelines-grid, .arch-nodes-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .phase-checklist {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo"><i data-lucide="book-open" style="width: 18px; height: 18px;"></i></div>
+                <div class="brand-title">Zero Hunger Specs</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="active"><i data-lucide="home"></i> 1. Overview</a>
+                <a href="#tech-stack"><i data-lucide="layers"></i> 2. Tech Stack</a>
+                <a href="#architecture"><i data-lucide="server"></i> 3. System Architecture</a>
+                <a href="#user-flow"><i data-lucide="git-branch"></i> 4. Workflows</a>
+                <a href="#modules"><i data-lucide="package"></i> 5. Functional Modules</a>
+                <a href="#api-structure"><i data-lucide="terminal"></i> 6. API Sandbox</a>
+                <a href="#database-design"><i data-lucide="database"></i> 7. Database Schemas</a>
+                <a href="#project-structure"><i data-lucide="folder-tree"></i> 8. Folder Explorer</a>
+                <a href="#roadmap"><i data-lucide="calendar"></i> 9. Agile Roadmap</a>
+                <a href="#ui-guidelines"><i data-lucide="palette"></i> 10. Design Rules</a>
+            </nav>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; border-top: 1px dashed var(--card-border); padding-top: 16px; margin-top: 24px;">
+            SaaS Blueprint · v1.0
+        </div>
+    </aside>
+
+    <!-- Workspace Area -->
+    <div class="workspace">
+        
+        <!-- Header Navbar with Search -->
+        <div class="top-navbar">
+            <div class="search-container">
+                <i data-lucide="search" class="search-icon" style="width: 18px; height: 18px;"></i>
+                <input type="text" class="search-input" id="search-input" placeholder="Search specifications (e.g. JWT, POST)..." oninput="handleSearch()">
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">
+                <i data-lucide="shield-check" style="color: var(--accent); width: 18px; height: 18px;"></i>
+                Full-Stack SRS Blueprint
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header>
+                <div class="doc-tag"><i data-lucide="file-text"></i> Official Project Specifications</div>
+                <h1>Software Requirements Specification (SRS) & Implementation Blueprint</h1>
+                <p class="subtitle">Interactive Full-Stack Development Training Project Documentation</p>
+            </header>
+
+            <!-- 1. Project Overview -->
+            <section id="overview">
+                <div class="section-header">
+                    <i data-lucide="home" class="section-icon"></i>
+                    <h2>1. Project Overview</h2>
+                </div>
+                
+                <div class="content-card">
+                    <div class="overview-box">
+                        <h4 style="font-size: 1.2rem; color: var(--accent); margin-bottom: 12px;">🚀 Project Title: Zero Hunger Platform</h4>
+                        <p>An interactive Full-Stack SaaS platform designed to eliminate community food waste by instantly matching surplus food donors (hotels, restaurants, weddings) with local logistics volunteers and distribution NGOs.</p>
+                    </div>
+
+                    <div class="overview-grid">
+                        <div class="overview-box" style="border-top: 1px dashed var(--card-border); padding-top: 16px;">
+                            <h4><i data-lucide="alert-circle" style="color: var(--red);"></i> The Problem</h4>
+                            <p>Fresh, edible meals are discarded in massive volumes daily at event halls, restaurants, and corporate hostels, while relief organizations struggle to secure active food provisions due to poor real-time coordination channels.</p>
+                        </div>
+                        <div class="overview-box" style="border-top: 1px dashed var(--card-border); padding-top: 16px;">
+                            <h4><i data-lucide="check" style="color: var(--green);"></i> The Proposed Solution</h4>
+                            <p>A unified portal that allows Donors to list active food items with expiration pings, filters locations dynamically, dispatches notifications to nearby Volunteers, and enables NGOs to claim shipments safely.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Technology Stack -->
+            <section id="tech-stack">
+                <div class="section-header">
+                    <i data-lucide="layers" class="section-icon"></i>
+                    <h2>2. Technology Stack</h2>
+                </div>
+                <p>The Zero Hunger platform is designed on a high-performance **MERN Stack** (MongoDB, Express, React, Node.js) architecture, leveraging industry-standard developer paradigms.</p>
+
+                <div class="tech-stack-container">
+                    
+                    <div class="tech-card">
+                        <div class="tech-card-header"><i data-lucide="monitor"></i> Frontend Layer</div>
+                        <div class="tech-badge-list">
+                            <span class="tech-badge">React.js (v18)</span>
+                            <span class="tech-badge">Context API</span>
+                            <span class="tech-badge">Tailwind CSS</span>
+                            <span class="tech-badge">Axios</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-card-header"><i data-lucide="cpu"></i> Backend Layer</div>
+                        <div class="tech-badge-list">
+                            <span class="tech-badge">Node.js (LTS)</span>
+                            <span class="tech-badge">Express.js</span>
+                            <span class="tech-badge">JWT Auth</span>
+                            <span class="tech-badge">Cors & Helmet</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-card-header"><i data-lucide="database"></i> Database & DevOps</div>
+                        <div class="tech-badge-list">
+                            <span class="tech-badge">MongoDB</span>
+                            <span class="tech-badge">Mongoose ODM</span>
+                            <span class="tech-badge">Git & GitHub</span>
+                            <span class="tech-badge">Vercel Deploy</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 3. System Architecture -->
+            <section id="architecture">
+                <div class="section-header">
+                    <i data-lucide="server" class="section-icon"></i>
+                    <h2>3. System Architecture</h2>
+                </div>
+                <p>Click on any structural tier below to analyze its core technologies, target execution ports, and database relationship pathways.</p>
+
+                <!-- Interactive Architecture visual block nodes -->
+                <div class="arch-nodes-grid">
+                    <div class="arch-node active" id="node-client" onclick="selectArchNode('client')">
+                        <div class="arch-node-logo"><i data-lucide="monitor"></i></div>
+                        <h4>Frontend UI Client</h4>
+                        <p>React.js · Port 3000</p>
+                    </div>
+                    <div class="arch-node" id="node-server" onclick="selectArchNode('server')">
+                        <div class="arch-node-logo"><i data-lucide="cpu"></i></div>
+                        <h4>Express Server API</h4>
+                        <p>Node.js · Port 5000</p>
+                    </div>
+                    <div class="arch-node" id="node-database" onclick="selectArchNode('database')">
+                        <div class="arch-node-logo"><i data-lucide="database"></i></div>
+                        <h4>MongoDB Database</h4>
+                        <p>Mongoose · Port 27017</p>
+                    </div>
+                </div>
+
+                <!-- Dynamic architecture card details panel -->
+                <div class="arch-details-box" id="arch-details-box">
+                    <div class="arch-details-title" id="arch-details-title">
+                        <i data-lucide="monitor"></i> Frontend UI Client (React.js)
+                    </div>
+                    <div class="arch-details-content" id="arch-details-content">
+                        Serves as the user-facing web interface. Captured form listings from Donors (e.g. food item name, quantity, expiration hours) are validated locally inside custom hooks and transferred via secure Axios HTTP requests over to the API Backend server.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Workflows -->
+            <section id="user-flow">
+                <div class="section-header">
+                    <i data-lucide="git-branch" class="section-icon"></i>
+                    <h2>4. System Workflows</h2>
+                </div>
+                <p>Trace the operational flow cycles of authentications and core transactions within the Zero Hunger application.</p>
+
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px;">🔐 User Authentication & Authorization Flow</h4>
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <h5>Register</h5>
+                        <p>Submit Profile</p>
+                    </div>
+                    <div class="flow-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></div>
+                    <div class="flow-step">
+                        <h5>Verify JWT</h5>
+                        <p>Issues Auth Tokens</p>
+                    </div>
+                    <div class="flow-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></div>
+                    <div class="flow-step">
+                        <h5>Role Check</h5>
+                        <p>Donor / NGO / Vol</p>
+                    </div>
+                    <div class="flow-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></div>
+                    <div class="flow-step">
+                        <h5>Active Portal</h5>
+                        <p>Access Dashboard</p>
+                    </div>
+                </div>
+
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-secondary); margin-top: 32px; margin-bottom: 8px;">🍲 Core Application Workflow (Donation & Dispatch)</h4>
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <h5>Donor Listing</h5>
+                        <p>POST /api/donations</p>
+                    </div>
+                    <div class="flow-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></div>
+                    <div class="flow-step">
+                        <h5>Express API</h5>
+                        <p>Validates Payload</p>
+                    </div>
+                    <div class="flow-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></div>
+                    <div class="flow-step">
+                        <h5>MongoDB Commit</h5>
+                        <p>Collection Inserted</p>
+                    </div>
+                    <div class="flow-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></div>
+                    <div class="flow-step">
+                        <h5>Broadcast Alert</h5>
+                        <p>NGOs & Volunteers</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Functional Modules -->
+            <section id="modules">
+                <div class="section-header">
+                    <i data-lucide="package" class="section-icon"></i>
+                    <h2>5. Functional Modules</h2>
+                </div>
+                <p>Click on any module card below to expand its core functionality guidelines, CRUD operations, and training constraints.</p>
+
+                <div class="modules-grid">
+                    
+                    <!-- Module 1: Auth -->
+                    <div class="module-card expanded" id="mod-auth">
+                        <div class="module-card-header" onclick="toggleModule('mod-auth')">
+                            <div class="module-card-title">
+                                <i data-lucide="lock"></i>
+                                <span>Module 1: Authentication</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="module-card-arrow"></i>
+                        </div>
+                        <div class="module-card-content">
+                            <p>Coordinates system registrations and login check validations across the platform roles.</p>
+                            <ul class="module-list">
+                                <li><strong>User Registration</strong>: Capture coordinates, names, and passwords.</li>
+                                <li><strong>JSON Web Token (JWT)</strong>: Generate secure signatures for API authorization.</li>
+                                <li><strong>Role Verification</strong>: Enforce security barriers separating Donor profiles from NGO actions.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Module 2: Dashboard -->
+                    <div class="module-card" id="mod-dash">
+                        <div class="module-card-header" onclick="toggleModule('mod-dash')">
+                            <div class="module-card-title">
+                                <i data-lucide="bar-chart-3"></i>
+                                <span>Module 2: Analytics Dashboard</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="module-card-arrow"></i>
+                        </div>
+                        <div class="module-card-content">
+                            <p>Provides real-time metric trackers and visual summary grids customized for roles.</p>
+                            <ul class="module-list">
+                                <li><strong>Donor Overview</strong>: View completed donations count, reviews, and pending pickups.</li>
+                                <li><strong>NGO Workspace</strong>: View active neighborhood listings and claimed packages history.</li>
+                                <li><strong>Metrics Grid</strong>: Track total kilograms of saved food food, and active driver numbers.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Module 3: Donation Manager -->
+                    <div class="module-card" id="mod-donation">
+                        <div class="module-card-header" onclick="toggleModule('mod-donation')">
+                            <div class="module-card-title">
+                                <i data-lucide="soup"></i>
+                                <span>Module 3: Donation Allocation</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="module-card-arrow"></i>
+                        </div>
+                        <div class="module-card-content">
+                            <p>Performs complete database operations managing active food listings.</p>
+                            <ul class="module-list">
+                                <li><strong>Listing CRUD</strong>: Donors post, edit, read, and cancel food surplus batches.</li>
+                                <li><strong>Geo Filter queries</strong>: Dynamic list matches based on proximity coordinates.</li>
+                                <li><strong>Expiry alert engine</strong>: Auto-filter active notifications when packages expire.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Module 4: Dispatch -->
+                    <div class="module-card" id="mod-dispatch">
+                        <div class="module-card-header" onclick="toggleModule('mod-dispatch')">
+                            <div class="module-card-title">
+                                <i data-lucide="truck"></i>
+                                <span>Module 4: Volunteer Dispatch</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="module-card-arrow"></i>
+                        </div>
+                        <div class="module-card-content">
+                            <p>Coordinates the logistics matching courier dispatches.</p>
+                            <ul class="module-list">
+                                <li><strong>Claim Route</strong>: Map active pickups to nearby available volunteers.</li>
+                                <li><strong>Real-time GPS updates</strong>: Asynchronous tracking updates on dispatch logs.</li>
+                                <li><strong>Delivery Handover</strong>: Trigger completion receipts when delivered to the NGO.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 6. API Structure -->
+            <section id="api-structure">
+                <div class="section-header">
+                    <i data-lucide="terminal" class="section-icon"></i>
+                    <h2>6. API Explorer Sandbox</h2>
+                </div>
+                <p>Click on any API endpoint on the left sidebar to execute mock server requests and view structural request/response JSON payloads inside the terminal.</p>
+
+                <div class="api-explorer-grid">
+                    
+                    <!-- API left list menu -->
+                    <div class="api-routes-menu">
+                        <div>
+                            <div class="api-menu-group-title">Authentication APIs</div>
+                            <div class="api-routes-list">
+                                <div class="api-route-item active" onclick="selectApiRoute('post-register')">
+                                    <span class="api-badge post">POST</span>
+                                    <span>/auth/register</span>
+                                </div>
+                                <div class="api-route-item" onclick="selectApiRoute('post-login')">
+                                    <span class="api-badge post">POST</span>
+                                    <span>/auth/login</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="api-menu-group-title">Donation APIs</div>
+                            <div class="api-routes-list">
+                                <div class="api-route-item" onclick="selectApiRoute('post-donation')">
+                                    <span class="api-badge post">POST</span>
+                                    <span>/donations</span>
+                                </div>
+                                <div class="api-route-item" onclick="selectApiRoute('get-donations')">
+                                    <span class="api-badge get">GET</span>
+                                    <span>/donations/active</span>
+                                </div>
+                                <div class="api-route-item" onclick="selectApiRoute('put-claim')">
+                                    <span class="api-badge put">PUT</span>
+                                    <span>/donations/:id/claim</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API right terminal mockup -->
+                    <div class="api-terminal">
+                        <div class="api-terminal-header">
+                            <div class="terminal-dots">
+                                <span class="terminal-btn-red"></span>
+                                <span class="terminal-btn-yellow"></span>
+                                <span class="terminal-btn-green"></span>
+                            </div>
+                            <div class="terminal-title-text" id="terminal-title-text">POST /api/auth/register</div>
+                            <div style="width: 40px;"></div>
+                        </div>
+                        <div class="api-terminal-body" id="api-terminal-body">
+                            <div class="terminal-meta-row">
+                                <span class="terminal-heading">ENDPOINT DESCRIPTION:</span>
+                                <span id="api-desc-box">Submits a new registration request for Donors, NGOs, or Volunteers.</span>
+                            </div>
+
+                            <span class="terminal-heading">MOCK JSON REQUEST BODY:</span>
+                            <div class="terminal-code-block" id="api-req-box">{
+  "name": "Hilton Event Center",
+  "email": "noida@hilton.com",
+  "password": "hashed_password_string",
+  "role": "Donor",
+  "location": "Sector 62, Noida"
+}</div>
+
+                            <span class="terminal-heading">MOCK JSON RESPONSE PAYLOAD (201 CREATED):</span>
+                            <div class="terminal-code-block" id="api-res-box">{
+  "success": true,
+  "message": "User registration successful.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "USR-99271",
+    "name": "Hilton Event Center",
+    "role": "Donor"
+  }
+}</div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 7. Database Design -->
+            <section id="database-design">
+                <div class="section-header">
+                    <i data-lucide="database" class="section-icon"></i>
+                    <h2>7. Database Design (MongoDB Schemas)</h2>
+                </div>
+                <p>Toggle tabs below to explore our database models, validation structures, and active property schemas.</p>
+
+                <!-- Tab selectors -->
+                <div class="db-tab-container">
+                    <button class="db-tab-btn active" id="tab-users" onclick="selectDbTab('users')">Users Collection</button>
+                    <button class="db-tab-btn" id="tab-donors" onclick="selectDbTab('donors')">Donors Collection</button>
+                    <button class="db-tab-btn" id="tab-donations" onclick="selectDbTab('donations')">Donations Collection</button>
+                </div>
+
+                <!-- Tab grid details content -->
+                <div class="db-schema-grid" id="db-schema-grid">
+                    
+                    <!-- Table schema details -->
+                    <div class="schema-table-container">
+                        <table class="schema-table">
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Data Type</th>
+                                    <th>Constraint</th>
+                                </tr>
+                            </thead>
+                            <tbody id="db-table-body">
+                                <tr>
+                                    <td><code>_id</code></td>
+                                    <td>ObjectId</td>
+                                    <td>Primary Key (Auto)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>name</code></td>
+                                    <td>String</td>
+                                    <td>Required, Trimmed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>email</code></td>
+                                    <td>String</td>
+                                    <td>Required, Unique, Lowercase</td>
+                                </tr>
+                                <tr>
+                                    <td><code>password</code></td>
+                                    <td>String</td>
+                                    <td>Required (Min 6 chars)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>role</code></td>
+                                    <td>String</td>
+                                    <td>Enum: ['Donor', 'NGO', 'Volunteer']</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mongoose schema preview -->
+                    <div class="schema-code-preview" id="db-code-preview">const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['Donor', 'NGO', 'Volunteer'], required: true },
+  createdAt: { type: Date, default: Date.now }
+});</div>
+
+                </div>
+            </section>
+
+            <!-- 8. Project Structure -->
+            <section id="project-structure">
+                <div class="section-header">
+                    <i data-lucide="folder-tree" class="section-icon"></i>
+                    <h2>8. Project Folder Explorer</h2>
+                </div>
+                <p>Click on any folder or file in the tree menu on the left to see its structural implementation purpose in the detail drawer on the right.</p>
+
+                <div class="api-explorer-grid">
+                    
+                    <!-- Left directory tree -->
+                    <div class="tree-container">
+                        <div class="tree-node expanded">
+                            <div class="tree-node-title active" onclick="selectTreeNode(this, 'root')">
+                                <i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i>
+                                <span>project-root/</span>
+                            </div>
+                            <div class="tree-children">
+                                
+                                <!-- Client directory -->
+                                <div class="tree-node">
+                                    <div class="tree-node-title" onclick="selectTreeNode(this, 'client')">
+                                        <i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i>
+                                        <span>client/</span>
+                                    </div>
+                                    <div class="tree-children">
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'components')"><i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i><span>src/components/</span></div></div>
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'pages')"><i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i><span>src/pages/</span></div></div>
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'context')"><i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i><span>src/context/</span></div></div>
+                                    </div>
+                                </div>
+
+                                <!-- Server directory -->
+                                <div class="tree-node">
+                                    <div class="tree-node-title" onclick="selectTreeNode(this, 'server')">
+                                        <i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i>
+                                        <span>server/</span>
+                                    </div>
+                                    <div class="tree-children">
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'controllers')"><i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i><span>controllers/</span></div></div>
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'models')"><i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i><span>models/</span></div></div>
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'routes')"><i data-lucide="folder" class="tree-icon" style="width: 16px; height: 16px;"></i><span>routes/</span></div></div>
+                                        <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'serverjs')"><i data-lucide="file-code" class="tree-icon" style="width: 16px; height: 16px;"></i><span>server.js</span></div></div>
+                                    </div>
+                                </div>
+
+                                <div class="tree-node"><div class="tree-node-title" onclick="selectTreeNode(this, 'packagejson')"><i data-lucide="file-code" class="tree-icon" style="width: 16px; height: 16px;"></i><span>package.json</span></div></div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right detail panel -->
+                    <div class="tree-desc-panel" id="tree-desc-panel">
+                        <div class="tree-desc-header" id="tree-desc-header">
+                            <i data-lucide="folder" style="width: 18px; height: 18px;"></i>
+                            <span>project-root/</span>
+                        </div>
+                        <p style="font-size: 0.95rem; margin-bottom: 0;" id="tree-desc-content">
+                            Root folder of your MERN stack Zero Hunger application. Establishes the boundary separating the React frontend client and the Node/Express backend server.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 9. Development Roadmap -->
+            <section id="roadmap">
+                <div class="section-header">
+                    <i data-lucide="calendar" class="section-icon"></i>
+                    <h2>9. Agile Development Progress Board</h2>
+                </div>
+                <p>Track your bootcamp development phases in real-time. Check off milestones below; your progress will persist across browser refreshes.</p>
+
+                <div class="roadmap-timeline">
+                    
+                    <!-- Phase 1 -->
+                    <div class="roadmap-phase-card" id="phase-card-1">
+                        <div class="phase-number">01</div>
+                        <div class="phase-info">
+                            <h4>
+                                <span>Phase 1: Project Setup & Auth</span>
+                                <span class="phase-badge pending" id="phase-badge-1">Incomplete</span>
+                            </h4>
+                            <p style="font-size: 0.85rem; margin-bottom: 0;">Establish the core workspace and configure user credential registration gates.</p>
+                            
+                            <ul class="phase-checklist">
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(1, 'cb-1-1')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-1-1" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Initialize Node Express project & .gitignore</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(1, 'cb-1-2')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-1-2" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Configure MongoDB Mongoose schema keys</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(1, 'cb-1-3')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-1-3" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Build registration & login validation controllers</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(1, 'cb-1-4')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-1-4" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Implement JWT security middlewares</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="roadmap-phase-card" id="phase-card-2">
+                        <div class="phase-number">02</div>
+                        <div class="phase-info">
+                            <h4>
+                                <span>Phase 2: Core Modules Development</span>
+                                <span class="phase-badge pending" id="phase-badge-2">Incomplete</span>
+                            </h4>
+                            <p style="font-size: 0.85rem; margin-bottom: 0;">Build the operational donation management routes and dispatch loops.</p>
+                            
+                            <ul class="phase-checklist">
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(2, 'cb-2-1')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-2-1" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Build /api/donations CRUD controllers</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(2, 'cb-2-2')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-2-2" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Implement spatial location geo index sorting</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(2, 'cb-2-3')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-2-3" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Build volunteer claim and dispatch routes</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(2, 'cb-2-4')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-2-4" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Integrate mail notifications for NGO claims</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="roadmap-phase-card" id="phase-card-3">
+                        <div class="phase-number">03</div>
+                        <div class="phase-info">
+                            <h4>
+                                <span>Phase 3: Integration & UI Client</span>
+                                <span class="phase-badge pending" id="phase-badge-3">Incomplete</span>
+                            </h4>
+                            <p style="font-size: 0.85rem; margin-bottom: 0;">Design React interfaces, handle application states, and link API requests.</p>
+                            
+                            <ul class="phase-checklist">
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(3, 'cb-3-1')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-3-1" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Create React UI forms for Donors & NGOs</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(3, 'cb-3-2')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-3-2" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Configure global state via React Context API</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(3, 'cb-3-3')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-3-3" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Link endpoints with Axios routing and hooks</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(3, 'cb-3-4')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-3-4" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Enforce frontend validation barriers</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="roadmap-phase-card" id="phase-card-4">
+                        <div class="phase-number">04</div>
+                        <div class="phase-info">
+                            <h4>
+                                <span>Phase 4: Deployment & Tests</span>
+                                <span class="phase-badge pending" id="phase-badge-4">Incomplete</span>
+                            </h4>
+                            <p style="font-size: 0.85rem; margin-bottom: 0;">Enforce secure practices, build test plans, and deploy to Vercel/Render.</p>
+                            
+                            <ul class="phase-checklist">
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(4, 'cb-4-1')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-4-1" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Write Mocha/Chai integration endpoint tests</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(4, 'cb-4-2')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-4-2" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Configure automated deployment pipelines</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(4, 'cb-4-3')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-4-3" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Deploy frontend client to Vercel portal</span>
+                                </li>
+                                <li class="phase-checklist-item" onclick="toggleRoadmapItem(4, 'cb-4-4')">
+                                    <input type="checkbox" class="phase-checkbox" id="cb-4-4" onclick="event.stopPropagation(); syncCheckbox(this)">
+                                    <span>Deploy Express database core to Render/AWS</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 10. UI/UX Design Guidelines -->
+            <section id="ui-guidelines" style="margin-bottom: 80px;">
+                <div class="section-header">
+                    <i data-lucide="palette" class="section-icon"></i>
+                    <h2>10. UI/UX Design Guidelines</h2>
+                </div>
+                <p>Maintain these core SaaS guidelines during frontend training to ensure production-grade interface outputs.</p>
+
+                <div class="guidelines-grid">
+                    
+                    <div class="guide-box">
+                        <div class="guide-box-icon"><i data-lucide="palette"></i></div>
+                        <h4>Clean Light Theme</h4>
+                        <p>Default to slate and indigo palettes with a pristine white background. Minimize color bloat, using color exclusively to draw focus to action triggers and badges.</p>
+                    </div>
+
+                    <div class="guide-box">
+                        <div class="guide-box-icon"><i data-lucide="smartphone"></i></div>
+                        <h4>Responsive Layouts</h4>
+                        <p>Follow mobile-first flex/grid architectures. Ensure interactive elements translate cleanly into single-column structures on smaller screen viewports.</p>
+                    </div>
+
+                    <div class="guide-box">
+                        <div class="guide-box-icon"><i data-lucide="activity"></i></div>
+                        <h4>Micro-Interactions</h4>
+                        <p>Implement hover scale transitions and glowing border highlights for cards. Provide immediate visual feedback when copying endpoints or updating parameters.</p>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripting interactive engines -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. Architecture details database
+        const archInfo = {
+            client: {
+                title: "Frontend UI Client (React.js)",
+                icon: "monitor",
+                content: "Serves as the user-facing web interface. Captured form listings from Donors (e.g. food item name, quantity, expiration hours) are validated locally inside custom hooks and transferred via secure Axios HTTP requests over to the API Backend server."
+            },
+            server: {
+                title: "Express Server API (Node.js)",
+                icon: "cpu",
+                content: "Houses server router nodes. Processes CORS clearances, validates JWT authorization tokens, parses incoming JSON request bodies, executes transaction safety rules, and commits records to MongoDB via Mongoose ODM connections."
+            },
+            database: {
+                title: "NoSQL Database (MongoDB)",
+                icon: "database",
+                content: "Acts as our cloud persistence vault. Holds document collections representing Users, Donors, NGOs, and Donations. Evaluates location fields using spatial 2dsphere indexes to speed up distance-based queries."
+            }
+        };
+
+        window.selectArchNode = function(id) {
+            // Remove active classes
+            document.querySelectorAll('.arch-node').forEach(node => node.classList.remove('active'));
+            
+            // Add active class to selected node
+            document.getElementById('node-' + id).classList.add('active');
+            
+            // Update details box content
+            const detailsBox = document.getElementById('arch-details-box');
+            const detailsTitle = document.getElementById('arch-details-title');
+            const detailsContent = document.getElementById('arch-details-content');
+            
+            const info = archInfo[id];
+            detailsTitle.innerHTML = `<i data-lucide="${info.icon}"></i> ${info.title}`;
+            detailsContent.textContent = info.content;
+            
+            // Re-render lucide icon inside detail card
+            lucide.createIcons();
+        };
+
+        // 2. Functional Modules collapse/expand
+        window.toggleModule = function(id) {
+            const card = document.getElementById(id);
+            card.classList.toggle('expanded');
+        };
+
+        // 3. API Explorer database
+        const apiInfo = {
+            'post-register': {
+                route: "POST /api/auth/register",
+                desc: "Submits a new registration request for Donors, NGOs, or Volunteers.",
+                req: `{
+  "name": "Hilton Event Center",
+  "email": "noida@hilton.com",
+  "password": "hashed_password_string",
+  "role": "Donor",
+  "location": "Sector 62, Noida"
+}`,
+                res: `{
+  "success": true,
+  "message": "User registration successful.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "USR-99271",
+    "name": "Hilton Event Center",
+    "role": "Donor"
+  }
+}`
+            },
+            'post-login': {
+                route: "POST /api/auth/login",
+                desc: "Validates user credentials and returns a secure JWT login token.",
+                req: `{
+  "email": "noida@hilton.com",
+  "password": "user_submitted_password"
+}`,
+                res: `{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "USR-99271",
+    "name": "Hilton Event Center",
+    "role": "Donor"
+  }
+}`
+            },
+            'post-donation': {
+                route: "POST /api/donations",
+                desc: "Creates a new food surplus donation listing. Requires a valid JWT in the Authorization header.",
+                req: `{
+  "item": "Chicken Biryani",
+  "quantityKg": 35,
+  "expiryHours": 6,
+  "location": {
+    "type": "Point",
+    "coordinates": [77.3621, 28.6273]
+  }
+}`,
+                res: `{
+  "success": true,
+  "donationId": "DON-55172",
+  "message": "Donation listing created successfully.",
+  "expiryTime": "2026-05-31T20:35:15Z"
+}`
+            },
+            'get-donations': {
+                route: "GET /api/donations/active",
+                desc: "Fetches active, unclaimed food donations located within a specific proximity range.",
+                req: `(URL Query Parameters):
+?lat=28.6273&lng=77.3621&maxDistanceKm=5`,
+                res: `[
+  {
+    "_id": "DON-55172",
+    "donorName": "Hilton Event Center",
+    "item": "Chicken Biryani",
+    "quantityKg": 35,
+    "expiryHours": 6,
+    "distanceKm": 1.2
+  }
+]`
+            },
+            'put-claim': {
+                route: "PUT /api/donations/:id/claim",
+                desc: "Allows an authorized NGO to claim a specific donation listing.",
+                req: `{
+  "ngoId": "NGO-44172"
+}`,
+                res: `{
+  "success": true,
+  "message": "Donation claimed successfully. Volunteer dispatch notified.",
+  "pickupCode": "OTP-8827"
+}`
+            }
+        };
+
+        window.selectApiRoute = function(id) {
+            // Remove active class from menu items
+            document.querySelectorAll('.api-route-item').forEach(item => item.classList.remove('active'));
+            
+            // Add active class to clicked item
+            event.currentTarget.classList.add('active');
+            
+            // Update terminal
+            const info = apiInfo[id];
+            document.getElementById('terminal-title-text').textContent = info.route;
+            document.getElementById('api-desc-box').textContent = info.desc;
+            document.getElementById('api-req-box').textContent = info.req;
+            document.getElementById('api-res-box').textContent = info.res;
+        };
+
+        // 4. Database Tab details database
+        const dbInfo = {
+            users: {
+                preview: `const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['Donor', 'NGO', 'Volunteer'], required: true },
+  createdAt: { type: Date, default: Date.now }
+});`,
+                table: `
+                    <tr>
+                        <td><code>_id</code></td>
+                        <td>ObjectId</td>
+                        <td>Primary Key (Auto-Generated)</td>
+                    </tr>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td>String</td>
+                        <td>Required, Trimmed</td>
+                    </tr>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td>String</td>
+                        <td>Required, Unique, Lowercase</td>
+                    </tr>
+                    <tr>
+                        <td><code>password</code></td>
+                        <td>String</td>
+                        <td>Required (Min 6 characters)</td>
+                    </tr>
+                    <tr>
+                        <td><code>role</code></td>
+                        <td>String</td>
+                        <td>Required, Enum: ['Donor', 'NGO', 'Volunteer']</td>
+                    </tr>
+                `
+            },
+            donors: {
+                preview: `const donorProfileSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  businessLicense: { type: String, required: true },
+  rating: { type: Number, default: 5.0 },
+  hasColdStorage: { type: Boolean, default: false },
+  address: { type: String, required: true }
+});`,
+                table: `
+                    <tr>
+                        <td><code>_id</code></td>
+                        <td>ObjectId</td>
+                        <td>Primary Key</td>
+                    </tr>
+                    <tr>
+                        <td><code>userId</code></td>
+                        <td>ObjectId</td>
+                        <td>Foreign Key -> References <code>Users</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>businessLicense</code></td>
+                        <td>String</td>
+                        <td>Required for food safety checks</td>
+                    </tr>
+                    <tr>
+                        <td><code>rating</code></td>
+                        <td>Number</td>
+                        <td>Default: 5.0 (Calculates eligible score)</td>
+                    </tr>
+                    <tr>
+                        <td><code>hasColdStorage</code></td>
+                        <td>Boolean</td>
+                        <td>Default: false (Restricts perishable items)</td>
+                    </tr>
+                `
+            },
+            donations: {
+                preview: `const donationSchema = new mongoose.Schema({
+  donorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  item: { type: String, required: true },
+  quantityKg: { type: Number, required: true },
+  expiryHours: { type: Number, required: true },
+  isClaimed: { type: Boolean, default: false },
+  location: {
+    type: { type: String, default: 'Point' },
+    coordinates: { type: [Number], required: true } // [longitude, latitude]
+  }
+});`,
+                table: `
+                    <tr>
+                        <td><code>_id</code></td>
+                        <td>ObjectId</td>
+                        <td>Primary Key</td>
+                    </tr>
+                    <tr>
+                        <td><code>donorId</code></td>
+                        <td>ObjectId</td>
+                        <td>Foreign Key -> References <code>Users</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>item</code></td>
+                        <td>String</td>
+                        <td>Required, (e.g. "Chicken Biryani")</td>
+                    </tr>
+                    <tr>
+                        <td><code>quantityKg</code></td>
+                        <td>Number</td>
+                        <td>Required (Validates capacity allocations)</td>
+                    </tr>
+                    <tr>
+                        <td><code>isClaimed</code></td>
+                        <td>Boolean</td>
+                        <td>Default: false (Updated inside claims routes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>location</code></td>
+                        <td>Object</td>
+                        <td>Spatial 2dsphere index for geo sorting</td>
+                    </tr>
+                `
+            }
+        };
+
+        window.selectDbTab = function(id) {
+            // Remove active classes
+            document.querySelectorAll('.db-tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active to clicked tab
+            document.getElementById('tab-' + id).classList.add('active');
+            
+            // Update table body and code block
+            const data = dbInfo[id];
+            document.getElementById('db-table-body').innerHTML = data.table;
+            document.getElementById('db-code-preview').textContent = data.preview;
+        };
+
+        // 5. Project Folder Tree visual interaction
+        const treeInfo = {
+            root: {
+                title: "project-root/",
+                content: "Root folder of your MERN stack Zero Hunger application. Establishes the boundaries separating client and server environments."
+            },
+            client: {
+                title: "client/",
+                content: "Contains all React.js client frontend source code, public assets, configurations, and build modules. Runs on port 3000."
+            },
+            components: {
+                title: "src/components/",
+                content: "Holds reusable, modular UI components such as layout containers, card widgets, navigation headers, and custom buttons."
+            },
+            pages: {
+                title: "src/pages/",
+                content: "Contains page-level views corresponding to system router targets (e.g., Login.jsx, DonorDashboard.jsx, NGOQueue.jsx)."
+            },
+            context: {
+                title: "src/context/",
+                content: "Houses Global State managers (React Context) used to share user authentication tokens and application states across components."
+            },
+            server: {
+                title: "server/",
+                content: "Contains all Node.js and Express.js backend source code, route controllers, schemas, and configurations. Runs on port 5000."
+            },
+            controllers: {
+                title: "controllers/",
+                content: "Separates business logic and database queries from routing paths (e.g., authentication validations and claims processing)."
+            },
+            models: {
+                title: "models/",
+                content: "Declares database schemas and Mongoose database model collections (Users, Donors, NGOs, Donations)."
+            },
+            routes: {
+                title: "routes/",
+                content: "Maps API routing endpoints (e.g., /api/auth, /api/donations) to their corresponding request controllers."
+            },
+            serverjs: {
+                title: "server.js",
+                content: "Main entry point file for the Express backend. Configures CORS clearances, connects database services, and boots the local port server."
+            },
+            packagejson: {
+                title: "package.json",
+                content: "Specifies core dependencies (express, mongoose, bcryptjs, jsonwebtoken), environment scripts, and metadata parameters."
+            }
+        };
+
+        window.selectTreeNode = function(element, id) {
+            // Remove active classes
+            document.querySelectorAll('.tree-node-title').forEach(el => el.classList.remove('active'));
+            
+            // Add active class to clicked node title
+            element.classList.add('active');
+            
+            // Toggle folder expansion
+            const node = element.parentElement;
+            node.classList.toggle('expanded');
+            
+            // Update details card
+            const data = treeInfo[id];
+            document.getElementById('tree-desc-header').innerHTML = `<i data-lucide="${id === 'serverjs' || id === 'packagejson' ? 'file-code' : 'folder'}" style="width: 18px; height: 18px;"></i> <span>${data.title}</span>`;
+            document.getElementById('tree-desc-content').textContent = data.content;
+            
+            // Re-render icon
+            lucide.createIcons();
+            
+            // Prevent bubbling
+            event.stopPropagation();
+        };
+
+        // 6. Persistent Agile Progress Tracker Board
+        const ROADMAP_KEY = 'zero-hunger-srs-roadmap';
+
+        function loadRoadmapState() {
+            const raw = localStorage.getItem(ROADMAP_KEY);
+            if (!raw) return;
+            try {
+                const state = JSON.parse(raw);
+                Object.keys(state).forEach(id => {
+                    const cb = document.getElementById(id);
+                    if (cb && state[id]) {
+                        cb.checked = true;
+                        cb.closest('.phase-checklist-item').classList.add('checked');
+                    }
+                });
+            } catch (e) {
+                console.error("Roadmap state parse error", e);
+            }
+            updatePhaseBorders();
+        }
+
+        window.syncCheckbox = function(cb) {
+            cb.closest('.phase-checklist-item').classList.toggle('checked', cb.checked);
+            saveRoadmapState();
+            updatePhaseBorders();
+        };
+
+        window.toggleRoadmapItem = function(phaseNum, id) {
+            const cb = document.getElementById(id);
+            if (cb) {
+                cb.checked = !cb.checked;
+                cb.closest('.phase-checklist-item').classList.toggle('checked', cb.checked);
+                saveRoadmapState();
+                updatePhaseBorders();
+            }
+        };
+
+        function saveRoadmapState() {
+            const state = {};
+            document.querySelectorAll('.phase-checkbox').forEach(cb => {
+                state[cb.id] = cb.checked;
+            });
+            localStorage.setItem(ROADMAP_KEY, JSON.stringify(state));
+        }
+
+        function updatePhaseBorders() {
+            for (let phase = 1; phase <= 4; phase++) {
+                const phaseCard = document.getElementById('phase-card-' + phase);
+                const badge = document.getElementById('phase-badge-' + phase);
+                const checkboxes = phaseCard.querySelectorAll('.phase-checkbox');
+                const checkedCount = phaseCard.querySelectorAll('.phase-checkbox:checked').length;
+                
+                if (checkedCount === checkboxes.length) {
+                    phaseCard.classList.add('completed');
+                    badge.textContent = "Completed";
+                    badge.className = "phase-badge completed";
+                } else {
+                    phaseCard.classList.remove('completed');
+                    badge.textContent = "Incomplete";
+                    badge.className = "phase-badge pending";
+                }
+            }
+        }
+
+        // 7. Global Specs Search Search Index Engine
+        const searchableSections = [
+            { id: 'overview', keywords: ['title', 'overview', 'description', 'problem', 'solution', 'donor', 'ngo', 'volunteer', 'vendor', 'admin'] },
+            { id: 'tech-stack', keywords: ['react', 'next', 'tailwind', 'redux', 'context', 'axios', 'node', 'express', 'mongodb', 'mongoose', 'jwt', 'docker', 'vercel'] },
+            { id: 'architecture', keywords: ['client', 'server', 'architecture', 'database', 'rest', 'port', 'mongoose', 'flowchart', 'diagram'] },
+            { id: 'user-flow', keywords: ['user', 'flow', 'journey', 'authentication', 'workflow', 'registration', 'login', 'dashboard', 'dispatch', 'claim'] },
+            { id: 'modules', keywords: ['auth', 'dashboard', 'donation', 'dispatch', 'modules', 'crud', 'safety', 'claims', 'coordinate'] },
+            { id: 'api-structure', keywords: ['endpoints', 'post', 'get', 'put', 'delete', 'auth', 'payload', 'json', 'body', 'response', 'headers'] },
+            { id: 'database-design', keywords: ['mongoose', 'schema', 'collection', 'database', 'users', 'donors', 'donations', 'fields', 'primary', 'type'] },
+            { id: 'project-structure', keywords: ['client', 'server', 'project-root', 'controllers', 'models', 'routes', 'packages', 'tree', 'explorer', 'folder'] },
+            { id: 'roadmap', keywords: ['phase', 'agile', 'timeline', 'progress', 'setup', 'tasks', 'roadmap', 'milestones', 'checklist'] },
+            { id: 'ui-guidelines', keywords: ['ui', 'ux', 'guidelines', 'theme', 'color', 'mobile-first', 'responsive', 'interactions', 'cards', 'principles'] }
+        ];
+
+        window.handleSearch = function() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            if (!query) return;
+
+            // Find matching section in index
+            const match = searchableSections.find(sec => {
+                return sec.id.toLowerCase().includes(query) || sec.keywords.some(kw => kw.includes(query));
+            });
+
+            if (match) {
+                const element = document.getElementById(match.id);
+                if (element) {
+                    // Smooth scroll to match
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Highlight effect
+                    element.classList.remove('search-highlight-effect');
+                    void element.offsetWidth; // Trigger reflow for animation restart
+                    element.classList.add('search-highlight-effect');
+                    
+                    // Update active nav state
+                    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + match.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            }
+        };
+
+        // Scroll Intersection Observer to update active nav state on manual scroll
+        const observerSections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.25
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        observerSections.forEach(sec => observer.observe(sec));
+
+        // Bootstrappers
+        loadRoadmapState();
+
+    </script>
+</body>
+</html>
