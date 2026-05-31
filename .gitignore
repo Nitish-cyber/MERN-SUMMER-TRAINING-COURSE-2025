@@ -1,0 +1,10 @@
+# Exclude the fullstack MERN project folder from remote tracking as requested (dont push)
+zero-hunger-fullstack/
+
+# Exclude packages and system logs
+node_modules/
+.env
+*.log
+.DS_Store
+dist/
+build/
