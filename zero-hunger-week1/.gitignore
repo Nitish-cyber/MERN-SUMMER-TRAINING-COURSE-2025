@@ -1,0 +1,14 @@
+# Dependency folders
+node_modules/
+
+# Local configuration files
+.env
+.env.local
+
+# IDE settings
+.vscode/
+.idea/
+
+# System logs
+*.log
+npm-debug.log*
