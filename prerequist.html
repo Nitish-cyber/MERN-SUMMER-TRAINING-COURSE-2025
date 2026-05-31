@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MERN Bootcamp · Setup Guide</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Devicon CDN (For Developer Brand Logos) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    
+    <!-- Lucide Icons (For Interface Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            /* Premium Dark Theme Variables (Default) */
+            --bg: #0b0f19;
+            --sidebar-bg: #070a13;
+            --card-bg: #111827;
+            --card-border: rgba(255, 255, 255, 0.06);
+            --card-hover-border: rgba(99, 102, 241, 0.4);
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --accent-soft: rgba(99, 102, 241, 0.08);
+            
+            --green: #10b981;
+            --green-glow: rgba(16, 185, 129, 0.15);
+            --green-soft: rgba(16, 185, 129, 0.08);
+            
+            --amber: #f59e0b;
+            --amber-soft: rgba(245, 158, 11, 0.08);
+            --amber-border: rgba(245, 158, 11, 0.2);
+            
+            --red: #ef4444;
+            --red-soft: rgba(239, 68, 68, 0.08);
+            
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --glow-vscode: 0 0 25px rgba(0, 122, 204, 0.15);
+            --glow-nodejs: 0 0 25px rgba(131, 205, 41, 0.15);
+            --glow-git: 0 0 25px rgba(240, 80, 50, 0.15);
+            --glow-mongodb: 0 0 25px rgba(71, 162, 72, 0.15);
+            --glow-postman: 0 0 25px rgba(255, 108, 55, 0.15);
+            --glow-chrome: 0 0 25px rgba(66, 133, 244, 0.15);
+            --glow-react: 0 0 25px rgba(97, 218, 251, 0.15);
+            --glow-eslint: 0 0 25px rgba(75, 50, 195, 0.15);
+            --glow-prettier: 0 0 25px rgba(247, 185, 85, 0.15);
+        }
+
+        body.light-mode {
+            /* Premium Light Theme Variables */
+            --bg: #f8fafc;
+            --sidebar-bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --card-border: rgba(0, 0, 0, 0.06);
+            --card-hover-border: rgba(99, 102, 241, 0.3);
+            --text: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            
+            --accent: #4f46e5;
+            --accent-hover: #3730a3;
+            --accent-glow: rgba(79, 70, 229, 0.08);
+            --accent-soft: #f5f3ff;
+            
+            --green: #059669;
+            --green-glow: rgba(5, 150, 105, 0.08);
+            --green-soft: #ecfdf5;
+            
+            --amber: #d97706;
+            --amber-soft: #fffbeb;
+            --amber-border: #fde68a;
+            
+            --red: #dc2626;
+            --red-soft: #fef2f2;
+            
+            --glow-vscode: 0 4px 15px rgba(0, 122, 204, 0.08);
+            --glow-nodejs: 0 4px 15px rgba(131, 205, 41, 0.08);
+            --glow-git: 0 4px 15px rgba(240, 80, 50, 0.08);
+            --glow-mongodb: 0 4px 15px rgba(71, 162, 72, 0.08);
+            --glow-postman: 0 4px 15px rgba(255, 108, 55, 0.08);
+            --glow-chrome: 0 4px 15px rgba(66, 133, 244, 0.08);
+            --glow-react: 0 4px 15px rgba(97, 218, 251, 0.08);
+            --glow-eslint: 0 4px 15px rgba(75, 50, 195, 0.08);
+            --glow-prettier: 0 4px 15px rgba(247, 185, 85, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 320px;
+            min-width: 320px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            padding: 40px 28px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text) 30%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        /* Navigation links */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: auto;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--text);
+            background: var(--accent-soft);
+        }
+
+        .sidebar-nav a.active {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            border-radius: 2px;
+            background: var(--accent);
+        }
+
+        .sidebar-nav .nav-badge {
+            margin-left: auto;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 700;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+
+        /* Sidebar Progress Ring Panel */
+        .sidebar-progress-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .progress-ring-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .progress-ring-circle-bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 8;
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 276.46; /* 2 * PI * r (r=44) */
+            stroke-dashoffset: 276.46;
+            transform: rotate(-90deg);
+            transform-origin: 50px 50px;
+            transition: stroke-dashoffset 0.35s;
+        }
+
+        .progress-percent-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .sidebar-progress-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-footer {
+            margin-top: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            color: var(--text);
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        /* Main Content Styling */
+        .main-container {
+            flex: 1;
+            padding: 56px 64px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .doc-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text) 30%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 720px;
+            line-height: 1.6;
+        }
+
+        /* Info Alert Banner */
+        .alert-card {
+            background: var(--amber-soft);
+            border: 1px solid var(--amber-border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.03);
+        }
+
+        .alert-icon {
+            color: var(--amber);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-content h4 {
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .alert-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Top Progress Overview Panel */
+        .dashboard-progress-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(17, 24, 39, 0.8) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-progress-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .progress-header-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 2;
+        }
+
+        .progress-title-block h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .progress-status-caption {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-stat-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .progress-bar-track {
+            height: 12px;
+            background: var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, #a855f7 100%);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: progress-shimmer 2s infinite;
+        }
+
+        @keyframes progress-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .stats-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 8px;
+            z-index: 2;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            color: var(--accent);
+            background: var(--accent-soft);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-meta h5 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .stat-meta p {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Section Headings */
+        .section-header {
+            margin-top: 64px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-icon {
+            color: var(--accent);
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-size: 1.05rem;
+        }
+
+        /* Responsive Grids */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .tools-list-compact {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* Tool Card Styles */
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: transparent;
+            transition: background 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Highlight states based on class */
+        .tool-card.card-vscode:hover { box-shadow: var(--glow-vscode); }
+        .tool-card.card-vscode::before { background: #007acc; }
+
+        .tool-card.card-nodejs:hover { box-shadow: var(--glow-nodejs); }
+        .tool-card.card-nodejs::before { background: #83cd29; }
+
+        .tool-card.card-git:hover { box-shadow: var(--glow-git); }
+        .tool-card.card-git::before { background: #f05032; }
+
+        .tool-card.card-github:hover { box-shadow: 0 0 25px rgba(255, 255, 255, 0.05); }
+        .tool-card.card-github::before { background: #64748b; }
+
+        .tool-card.card-mongodb:hover { box-shadow: var(--glow-mongodb); }
+        .tool-card.card-mongodb::before { background: #47a248; }
+
+        .tool-card.card-compass:hover { box-shadow: var(--glow-mongodb); }
+        .tool-card.card-compass::before { background: #10b981; }
+
+        .tool-card.card-postman:hover { box-shadow: var(--glow-postman); }
+        .tool-card.card-postman::before { background: #ff6c37; }
+
+        .tool-card.card-chrome:hover { box-shadow: var(--glow-chrome); }
+        .tool-card.card-chrome::before { background: #4285f4; }
+
+        .tool-card.card-githubdesktop:hover { box-shadow: 0 0 25px rgba(168, 85, 247, 0.15); }
+        .tool-card.card-githubdesktop::before { background: #a855f7; }
+
+        .tool-card.card-reactdevtools:hover { box-shadow: var(--glow-react); }
+        .tool-card.card-reactdevtools::before { background: #61dafb; }
+
+        .tool-card.card-thunderclient:hover { box-shadow: 0 0 25px rgba(168, 85, 247, 0.15); }
+        .tool-card.card-thunderclient::before { background: #a855f7; }
+
+        .tool-card.card-eslint:hover { box-shadow: var(--glow-eslint); }
+        .tool-card.card-eslint::before { background: #4b32c3; }
+
+        .tool-card.card-prettier:hover { box-shadow: var(--glow-prettier); }
+        .tool-card.card-prettier::before { background: #f7b955; }
+
+        .tool-card.card-zip:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); }
+        .tool-card.card-zip::before { background: #3b82f6; }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover .card-icon-wrapper {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-badge-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .card-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .card-badge.core {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+
+        .card-badge.extra {
+            background: var(--green-soft);
+            color: var(--green);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .card-badge.lts {
+            background: var(--border);
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+        }
+
+        .card-body h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            min-height: 44px;
+        }
+
+        .card-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            background: var(--border);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid var(--card-border);
+        }
+
+        .download-btn:hover {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .tool-card-tip {
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .tool-card-tip svg {
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Synced Installed Overlay State */
+        .tool-card.installed-state {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: linear-gradient(180deg, var(--card-bg) 80%, var(--green-soft) 100%);
+        }
+
+        .installed-indicator-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transform: scale(0);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+            z-index: 3;
+        }
+
+        .tool-card.installed-state .installed-indicator-badge {
+            transform: scale(1);
+        }
+
+        /* Verification Terminal Styling */
+        .terminal-card {
+            background: #090c15;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.4);
+            margin: 28px 0;
+        }
+
+        .terminal-header {
+            background: #0f1322;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .terminal-window-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-window-buttons span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .terminal-btn-red { background: #ef4444; }
+        .terminal-btn-yellow { background: #f59e0b; }
+        .terminal-btn-green { background: #10b981; }
+
+        .terminal-title {
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .terminal-body {
+            padding: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 8px;
+        }
+
+        .terminal-code {
+            color: #38bdf8;
+            margin-bottom: 16px;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        .terminal-action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .terminal-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: #ffffff;
+            font-family: var(--font-sans);
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .terminal-btn:hover {
+            background: var(--border);
+            border-color: var(--text-muted);
+        }
+
+        .terminal-btn.run-btn {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .terminal-btn.run-btn:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .terminal-console-output {
+            margin-top: 20px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            color: #10b981;
+            font-size: 0.85rem;
+            display: none;
+            animation: fade-in 0.3s forwards;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Checklist section */
+        .checklist-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-top: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .checklist {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--border-hover);
+        }
+
+        .checklist-item.done {
+            background: var(--green-soft);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .checklist-item.done .checklist-label {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            flex-shrink: 0;
+            position: relative;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checklist-item:hover .custom-checkbox {
+            border-color: var(--accent);
+        }
+
+        .custom-checkbox:checked {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .custom-checkbox::after {
+            content: '';
+            width: 10px;
+            height: 6px;
+            border-left: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(-45deg) translateY(-1px);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .custom-checkbox:checked::after {
+            opacity: 1;
+        }
+
+        .checklist-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: color 0.2s;
+        }
+
+        .checklist-item.done .checklist-label {
+            color: var(--text-muted);
+        }
+
+        /* FAQ Accordion */
+        .faq-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .faq-trigger {
+            width: 100%;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-family: var(--font-sans);
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .faq-icon-chevron {
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.open .faq-icon-chevron {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+            background: rgba(255, 255, 255, 0.005);
+        }
+
+        .faq-item.open .faq-content {
+            max-height: 1000px;
+            transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+        }
+
+        .faq-content-inner {
+            padding: 0 24px 20px 24px;
+            border-top: 1px dashed var(--border);
+            padding-top: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-content-inner ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-content-inner li {
+            margin-bottom: 4px;
+        }
+
+        .faq-content-inner strong {
+            color: var(--text);
+        }
+
+        /* Success Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Responsive Layouts */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                min-width: unset;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 24px;
+            }
+            .sidebar-brand {
+                margin-bottom: 20px;
+            }
+            .sidebar-nav {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .sidebar-nav a {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            .sidebar-nav a.active::before {
+                display: none;
+            }
+            .sidebar-progress-card {
+                display: none; /* Hide progress card from sidebar, it's on main screen */
+            }
+            .main-container {
+                padding: 32px 20px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .tools-grid, .tools-list-compact {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .stats-summary-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div class="brand-logo">🚀</div>
+                <div class="brand-title">MERN Setup</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="active"><i data-lucide="home"></i> Overview</a>
+                <a href="#required"><i data-lucide="package"></i> Required Tools <span class="nav-badge" id="required-badge">8</span></a>
+                <a href="#recommended"><i data-lucide="star"></i> Recommended</a>
+                <a href="#verify"><i data-lucide="terminal"></i> Verify Setup</a>
+                <a href="#checklist"><i data-lucide="check-square"></i> Checklist</a>
+                <a href="#support"><i data-lucide="help-circle"></i> Troubleshooting</a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Progress -->
+        <div class="sidebar-progress-card">
+            <div class="progress-ring-container">
+                <svg width="100" height="100">
+                    <circle class="progress-ring-circle-bg" cx="50" cy="50" r="44"></circle>
+                    <circle class="progress-ring-circle" id="radial-progress-bar" cx="50" cy="50" r="44"></circle>
+                </svg>
+                <div class="progress-percent-label" id="radial-progress-percent">0%</div>
+            </div>
+            <div class="sidebar-progress-text">Setup Checklist Progress</div>
+        </div>
+
+        <!-- Sidebar Footer & Dark Mode Toggle -->
+        <div class="sidebar-footer">
+            <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme">
+                <i data-lucide="sun" id="sun-icon" style="display: none;"></i>
+                <i data-lucide="moon" id="moon-icon"></i>
+            </button>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+                MERN Bootcamp · v2.1
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+        
+        <!-- Header -->
+        <header id="overview">
+            <div class="doc-tag"><i data-lucide="book-open"></i> Pre-Bootcamp Prerequisite</div>
+            <h1>Software Setup Guide</h1>
+            <p class="subtitle">Complete these setup requirements <strong>before the first training session</strong>. A fully configured environment keeps you focused on building high-performance MERN web apps.</p>
+        </header>
+
+        <!-- Warning Alert Banner -->
+        <div class="alert-card">
+            <i data-lucide="alert-triangle" class="alert-icon"></i>
+            <div class="alert-content">
+                <h4>Mandatory Installation Stage</h4>
+                <p>Please reserve approximately <strong>1 hour</strong> to complete these installations in advance. Having clean, functional local servers prevents troubleshooting delays when the coding starts.</p>
+            </div>
+        </div>
+
+        <!-- Progress Overview Dashboard -->
+        <div class="dashboard-progress-card">
+            <div class="progress-header-grid">
+                <div class="progress-title-block">
+                    <h3>Your Setup Progress</h3>
+                    <span class="progress-status-caption" id="progress-status-caption">Just getting started! Let's build your environment.</span>
+                </div>
+                <div style="text-align: right;">
+                    <div class="progress-stat-value" id="top-progress-percent">0%</div>
+                    <span class="progress-status-caption" id="progress-counter-label">0 of 10 steps completed</span>
+                </div>
+            </div>
+
+            <!-- Glowing Progress Bar -->
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="top-progress-bar"></div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="stats-summary-grid">
+                <div class="stat-item">
+                    <div class="stat-icon"><i data-lucide="box"></i></div>
+                    <div class="stat-meta">
+                        <h5>Core Stack</h5>
+                        <p>8 Required Apps</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i data-lucide="star"></i></div>
+                    <div class="stat-meta">
+                        <h5>Extras</h5>
+                        <p>6 Recommended</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i data-lucide="clock"></i></div>
+                    <div class="stat-meta">
+                        <h5>Est. Time</h5>
+                        <p>~60 Minutes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Required Tools Section -->
+        <section id="required">
+            <div class="section-header">
+                <i data-lucide="shield-check" class="section-icon"></i>
+                <h2>📦 Mandatory Core Software</h2>
+            </div>
+            <p class="section-desc">These tools form the base of the modern MERN Stack. You will interact with them during every single development session.</p>
+
+            <div class="tools-grid">
+                
+                <!-- 1. VS Code -->
+                <div class="tool-card card-vscode" id="card-c1">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #007acc;">
+                                <i class="devicon-vscode-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Visual Studio Code</h4>
+                            <p>The industry standard code editor. Lightweight, lighting fast, and highly customizable with extension modules.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://code.visualstudio.com/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                            <span>Install the <strong>Prettier</strong> & <strong>ESLint</strong> extensions immediately for automatic code layouts.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Node.js -->
+                <div class="tool-card card-nodejs" id="card-c2">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #83cd29;">
+                                <i class="devicon-nodejs-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">LTS</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Node.js Runtime</h4>
+                            <p>JavaScript runtime environment. Shipped together with npm (Node Package Manager), which is crucial for managing packages.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://nodejs.org/en/download" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
+                            <span>Always select the <strong>LTS (Long Term Support)</strong> build to ensure package stability.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Git -->
+                <div class="tool-card card-git" id="card-c3">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #f05032;">
+                                <i class="devicon-git-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">CLI</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Git Version Control</h4>
+                            <p>Distributed version control software. Designed to keep secure backups and maintain branches of your codebase.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://git-scm.com/downloads" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                            <span>Accept default path options during installation. CLI commands will be validated below.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. GitHub Account -->
+                <div class="tool-card card-github" id="card-c4">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper">
+                                <i class="devicon-github-original"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">Cloud</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>GitHub Account</h4>
+                            <p>Cloud repository hosting. Serves as your remote backup hub and displays your developer code portfolio to the industry.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://github.com/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="award" style="width: 16px; height: 16px;"></i>
+                            <span>Secure this account. It serves as your modern programming resume for recruitment.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. MongoDB Community Server -->
+                <div class="tool-card card-mongodb" id="card-c5">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #47a248;">
+                                <i class="devicon-mongodb-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">DB</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>MongoDB Community Server</h4>
+                            <p>NoSQL Document Database. The "M" database core layer of the MERN stack which stores all app data collections.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://www.mongodb.com/try/download/community" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="terminal" style="width: 16px; height: 16px;"></i>
+                            <span>Windows: Install "as a service". macOS: run <code>brew install mongodb-community</code> inside your terminal.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. MongoDB Compass -->
+                <div class="tool-card card-compass" id="card-c6">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <!-- Custom leafy compass style -->
+                            <div class="card-icon-wrapper" style="color: #10b981;">
+                                <i data-lucide="compass" style="width: 28px; height: 28px; stroke-width: 2.25;"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">GUI</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>MongoDB Compass</h4>
+                            <p>Visual database explorer GUI interface. Connect, view, filter, and modify database rows and structures visually.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://www.mongodb.com/products/tools/compass" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                            <span>This visual application is usually checked to install alongside your core MongoDB Server database install.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Postman -->
+                <div class="tool-card card-postman" id="card-c7">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #ff6c37;">
+                                <i class="devicon-postman-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">API</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Postman API Client</h4>
+                            <p>API design and testing portal. Essential for drafting, testing, and troubleshooting REST endpoints before front-end linkage.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://www.postman.com/downloads/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                            <span>A free desktop agent registration is fully sufficient for testing server development endpoints.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Google Chrome -->
+                <div class="tool-card card-chrome" id="card-c8">
+                    <div class="installed-indicator-badge"><i data-lucide="check"></i></div>
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #4285f4;">
+                                <i class="devicon-chrome-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge core">Core</span>
+                                <span class="card-badge lts">Web</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Google Chrome Browser</h4>
+                            <p>Primary testing web browser. Holds highly advanced devtools specifically configured for high-performance React runtime diagnostics.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://www.google.com/chrome/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                        <div class="tool-card-tip">
+                            <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                            <span>Chrome DevTools (<code>F12</code>) will act as your secondary command interface for front-end programming.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Recommended Extras Section -->
+        <section id="recommended">
+            <div class="section-header">
+                <i data-lucide="sparkles" class="section-icon"></i>
+                <h2>⭐ Highly Recommended Extras</h2>
+            </div>
+            <p class="section-desc">These packages are not mandatory, but installing them will tremendously accelerate and refine your local coding output.</p>
+
+            <div class="tools-list-compact">
+
+                <!-- 9. GitHub Desktop -->
+                <div class="tool-card card-githubdesktop" id="card-github-desktop">
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #a855f7;">
+                                <i data-lucide="monitor" style="width: 24px; height: 24px; stroke-width: 2.25;"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge extra">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>GitHub Desktop</h4>
+                            <p>Beautiful graphic dashboard alternative to command-line git workflows. Speeds up visual branch merges and commits.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://desktop.github.com/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 10. React DevTools -->
+                <div class="tool-card card-reactdevtools" id="card-react-devtools">
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #61dafb;">
+                                <i class="devicon-react-original colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge extra">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>React Developer Tools</h4>
+                            <p>Browser extension utility mapping React element virtual trees and diagnostics indicators directly into Chrome DevTools panel.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://react.dev/learn/react-developer-tools" target="_blank" class="download-btn">
+                            Install Extension <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 11. Thunder Client -->
+                <div class="tool-card card-thunderclient" id="card-thunder-client">
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #a855f7;">
+                                <i data-lucide="zap" style="width: 24px; height: 24px; fill: #a855f7; stroke: #a855f7;"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge extra">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Thunder Client</h4>
+                            <p>Super lightweight REST testing workspace running directly inside VS Code workspace panel. Prevents app-switching fatigue.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://www.thunderclient.com/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 12. ESLint -->
+                <div class="tool-card card-eslint" id="card-eslint">
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #4b32c3;">
+                                <i class="devicon-eslint-original colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge extra">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>ESLint Linter</h4>
+                            <p>Static JavaScript compiler analyzer. Spots variable errors, code logic warnings, and bugs before saving files.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://eslint.org/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 13. Prettier -->
+                <div class="tool-card card-prettier" id="card-prettier">
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #f7b955;">
+                                <i class="devicon-prettier-plain colored"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge extra">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>Prettier Formatter</h4>
+                            <p>Opinionated syntax auto-formatter. Automatically styles spacing, braces, and line alignments when you save files.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://prettier.io/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 14. 7-Zip -->
+                <div class="tool-card card-zip" id="card-7zip">
+                    <div>
+                        <div class="card-top">
+                            <div class="card-icon-wrapper" style="color: #3b82f6;">
+                                <i data-lucide="folder-archive" style="width: 24px; height: 24px; stroke-width: 2.25;"></i>
+                            </div>
+                            <div class="card-badge-row">
+                                <span class="card-badge extra">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>7-Zip Archiver</h4>
+                            <p>Free, extremely fast compressed folder unpacker. Crucial for managing complex zip/rar codebase downloads quickly.</p>
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <a href="https://www.7-zip.org/" target="_blank" class="download-btn">
+                            Visit Website <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Verification Workspace Section -->
+        <section id="verify">
+            <div class="section-header">
+                <i data-lucide="terminal" class="section-icon"></i>
+                <h2>⚡ Live Terminal Verification</h2>
+            </div>
+            <p class="section-desc">Once core software setups are completed, verify the configuration of Node and Git paths using this diagnostic terminal environment.</p>
+
+            <div class="terminal-card">
+                <div class="terminal-header">
+                    <div class="terminal-window-buttons">
+                        <span class="terminal-btn-red"></span>
+                        <span class="terminal-btn-yellow"></span>
+                        <span class="terminal-btn-green"></span>
+                    </div>
+                    <div class="terminal-title">
+                        <i data-lucide="terminal" style="width: 12px; height: 12px;"></i>
+                        bash · diagnostics.sh
+                    </div>
+                    <div style="width: 50px;"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="code-block-header">
+                        <span>Copy and execute inside your physical terminal</span>
+                        <span>v2.1</span>
+                    </div>
+                    <code class="terminal-code" id="terminal-raw-code">node -v
+npm -v
+git --version</code>
+                    
+                    <div class="terminal-action-row">
+                        <button class="terminal-btn" onclick="copyCode(this)" id="terminal-copy-btn">
+                            <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                            Copy Commands
+                        </button>
+                        <button class="terminal-btn run-btn" onclick="runSimulatedTerminal()">
+                            <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+                            Run Simulated Test
+                        </button>
+                    </div>
+
+                    <!-- Simulated diagnostics window console -->
+                    <div class="terminal-console-output" id="terminal-log-output">
+                        <span style="color: #64748b; display: block; margin-bottom: 6px;">$ ./diagnostics.sh --run</span>
+                        <span style="color: #38bdf8; display: block;">🔍 Scanning environment PATH registries...</span>
+                        <span style="color: #10b981; display: block; margin-top: 4px;">✔ node detected: v20.11.0 (LTS Active)</span>
+                        <span style="color: #10b981; display: block;">✔ npm detected: v10.2.4</span>
+                        <span style="color: #10b981; display: block;">✔ git detected: git version 2.43.0.windows.1</span>
+                        <span style="color: #e2e8f0; display: block; margin-top: 10px; border-top: 1px solid #1e293b; padding-top: 8px; font-weight: 600;">
+                            🎉 Diagnostics successful! Your paths are configured correctly.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 8px; margin-top: 16px;">
+                <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+                Expected Outcomes: Node (v20.x or above) · npm (v10.x or above) · Git (v2.x or above)
+            </p>
+
+            <div class="tool-card-tip" style="margin-top: 16px;">
+                <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+                <span>If your command line prompt returns a <strong>"Command not found"</strong> registry error, simply restart your system environment to flush variables, or consult the FAQ list under.</span>
+            </div>
+        </section>
+
+        <!-- Checklist Section -->
+        <section id="checklist">
+            <div class="section-header">
+                <i data-lucide="check-square" class="section-icon"></i>
+                <h2>🎯 Pre-Bootcamp Setup Checklist</h2>
+            </div>
+            <p class="section-desc">Click each element below to log progress. Complete all 10 stages to guarantee total bootcamp preparation!</p>
+
+            <div class="checklist-card">
+                <ul class="checklist" id="checklist-ul">
+                    <li class="checklist-item" onclick="toggleChecklistItem('c1')">
+                        <input type="checkbox" class="custom-checkbox" id="c1">
+                        <span class="checklist-label">Visual Studio Code Editor Installed</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c2')">
+                        <input type="checkbox" class="custom-checkbox" id="c2">
+                        <span class="checklist-label">Node.js Runtime & npm Package Manager Installed</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c3')">
+                        <input type="checkbox" class="custom-checkbox" id="c3">
+                        <span class="checklist-label">Git Local Version Control Installed</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c4')">
+                        <input type="checkbox" class="custom-checkbox" id="c4">
+                        <span class="checklist-label">GitHub Account Configured</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c5')">
+                        <input type="checkbox" class="custom-checkbox" id="c5">
+                        <span class="checklist-label">MongoDB Community Server running local service</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c6')">
+                        <input type="checkbox" class="custom-checkbox" id="c6">
+                        <span class="checklist-label">MongoDB Compass Graphic Dashboard Installed</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c7')">
+                        <input type="checkbox" class="custom-checkbox" id="c7">
+                        <span class="checklist-label">Postman Desktop Testing Client Installed</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c8')">
+                        <input type="checkbox" class="custom-checkbox" id="c8">
+                        <span class="checklist-label">Google Chrome DevTools Engine Configured</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c9')">
+                        <input type="checkbox" class="custom-checkbox" id="c9">
+                        <span class="checklist-label">Recommended Extras Installed (ESLint, Prettier, etc.)</span>
+                    </li>
+                    <li class="checklist-item" onclick="toggleChecklistItem('c10')">
+                        <input type="checkbox" class="custom-checkbox" id="c10">
+                        <span class="checklist-label">Terminal Diagnostics commands successfully completed</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Troubleshooting FAQ Section -->
+        <section id="support" style="margin-bottom: 80px;">
+            <div class="section-header">
+                <i data-lucide="help-circle" class="section-icon"></i>
+                <h2>💡 Troubleshooting & Support FAQ</h2>
+            </div>
+            <p class="section-desc">Encountering problems during server startup or command configurations? Review these direct diagnostic paths.</p>
+
+            <div class="faq-grid">
+                
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        <span>1. What should I do if a command is "not recognized"?</span>
+                        <i data-lucide="chevron-down" class="faq-icon-chevron"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <ol>
+                                <li><strong>Restart your physical terminal/VS Code</strong>: Path variable updates will not apply to shells already running.</li>
+                                <li><strong>Reboot your PC</strong>: This enforces a flush and loads newly registered binary addresses.</li>
+                                <li><strong>Verify your Installer configuration</strong>: Run the installer application again and explicitly ensure that the setting **"Add to PATH"** or **"Configure environmental variables"** checkbox is ticked.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        <span>2. What's the difference between Node.js LTS vs Current?</span>
+                        <i data-lucide="chevron-down" class="faq-icon-chevron"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p><strong>LTS (Long Term Support)</strong> represents the industry stable release build. Most corporate systems and public npm libraries configure their environments against this core. The <strong>Current</strong> build contains active experimental upgrades, but frequently breaks MERN package dependencies.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        <span>3. MongoDB server connection fails or times out?</span>
+                        <i data-lucide="chevron-down" class="faq-icon-chevron"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>Ensure that the database process is actively running in the background:</p>
+                            <ol style="margin-top: 8px;">
+                                <li><strong>Windows Systems</strong>: Type <code>services.msc</code> in Search, find **MongoDB Server**, right-click and click **Start**.</li>
+                                <li><strong>macOS Systems</strong>: Launch a terminal shell and start the background database daemon by running <code>brew services start mongodb-community</code>.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-trigger" onclick="toggleFaq(this)">
+                        <span>4. How do I get extra help if I get stuck?</span>
+                        <i data-lucide="chevron-down" class="faq-icon-chevron"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>If you've followed the steps and still run into blocks, don't worry! Here is your support checklist:</p>
+                            <ol style="margin-top: 8px;">
+                                <li>Take a clear screenshot of the exact terminal command printout or error panel.</li>
+                                <li>Check the official documentation pages linked on each tool card.</li>
+                                <li>Perform a quick web search on Stack Overflow using the error code.</li>
+                                <li>Post your diagnostic question along with details in our community chat server (Discord/Slack support channels). Our mentors are ready to help!</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Meta -->
+            <div style="border-top: 1px solid var(--border); margin-top: 64px; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">
+                <span>© MERN Stack Bootcamp Setup Guide</span>
+                <span>Document updated: June 2026</span>
+            </div>
+        </main>
+
+        <script>
+            // Constants & State Setup
+            const STORAGE_KEY = 'mern-setup-checklist-v2';
+            const checklistItemsCount = 10;
+            const coreAppsCount = 8;
+            
+            // UI elements
+            const checklistContainer = document.getElementById('checklist-ul');
+            const requiredBadge = document.getElementById('required-badge');
+            const radialProgressCircle = document.getElementById('radial-progress-bar');
+            const radialProgressPercent = document.getElementById('radial-progress-percent');
+            const topProgressPercent = document.getElementById('top-progress-percent');
+            const topProgressBar = document.getElementById('top-progress-bar');
+            const progressCounterLabel = document.getElementById('progress-counter-label');
+            const progressCaption = document.getElementById('progress-status-caption');
+            const bodyElement = document.body;
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+
+            // Initialize Lucide Icons
+            lucide.createIcons();
+
+            // Progress tracking updates
+            function updateProgress() {
+                const checkedCheckboxes = checklistContainer.querySelectorAll('input[type="checkbox"]:checked');
+                const checkedCount = checkedCheckboxes.length;
+                const percent = Math.round((checkedCount / checklistItemsCount) * 100);
+                
+                // Calculate Core Items completed (c1 through c8)
+                let coreCompleted = 0;
+                for (let i = 1; i <= coreAppsCount; i++) {
+                    const cb = document.getElementById('c' + i);
+                    if (cb && cb.checked) {
+                        coreCompleted++;
+                    }
+                }
+                const remainingCore = coreAppsCount - coreCompleted;
+                requiredBadge.textContent = remainingCore;
+                
+                // Toggle card background class style based on checkbox
+                for (let i = 1; i <= coreAppsCount; i++) {
+                    const card = document.getElementById('card-c' + i);
+                    const cb = document.getElementById('c' + i);
+                    if (card && cb) {
+                        if (cb.checked) {
+                            card.classList.add('installed-state');
+                        } else {
+                            card.classList.remove('installed-state');
+                        }
+                    }
+                }
+                
+                // Update Progress bar (Top Dashboard)
+                topProgressBar.style.width = percent + '%';
+                topProgressPercent.textContent = percent + '%';
+                progressCounterLabel.textContent = `${checkedCount} of ${checklistItemsCount} steps completed`;
+                
+                // Update progress status text caption
+                if (percent === 0) {
+                    progressCaption.textContent = "Just getting started! Let's build your environment.";
+                } else if (percent < 40) {
+                    progressCaption.textContent = "Setting the foundations. Off to a great start!";
+                } else if (percent < 70) {
+                    progressCaption.textContent = "Halfway there! Your development stack is taking shape.";
+                } else if (percent < 100) {
+                    progressCaption.textContent = "Almost ready to code! Just a few final verifications.";
+                } else {
+                    progressCaption.textContent = "🎉 Setup complete! You are fully prepared for the MERN Stack Training!";
+                    triggerCelebration();
+                }
+
+                // Update radial circular progress bar in sidebar
+                // Circular stroke-dashoffset: 2 * PI * r = 2 * 3.14159 * 44 = 276.46
+                const offset = 276.46 - (276.46 * checkedCount) / checklistItemsCount;
+                radialProgressCircle.style.strokeDashoffset = offset;
+                radialProgressPercent.textContent = percent + '%';
+            }
+
+            // Checklist Interaction Toggle
+            window.toggleChecklistItem = function(id) {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.checked = !cb.checked;
+                    cb.parentElement.classList.toggle('done', cb.checked);
+                    saveProgress();
+                    updateProgress();
+                }
+            };
+
+            // Setup direct click handlers on checkboxes so clicking checkmark doesn't double toggle
+            checklistContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    cb.parentElement.classList.toggle('done', cb.checked);
+                    saveProgress();
+                    updateProgress();
+                });
+            });
+
+            // Save checklists to localStorage
+            function saveProgress() {
+                const state = {};
+                for (let i = 1; i <= checklistItemsCount; i++) {
+                    const cb = document.getElementById('c' + i);
+                    if (cb) state['c' + i] = cb.checked;
+                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            }
+
+            // Load progress from localStorage
+            function loadProgress() {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                try {
+                    const state = JSON.parse(raw);
+                    for (let i = 1; i <= checklistItemsCount; i++) {
+                        const cb = document.getElementById('c' + i);
+                        if (cb && state['c' + i]) {
+                            cb.checked = true;
+                            cb.parentElement.classList.add('done');
+                        }
+                    }
+                } catch (e) {
+                    console.error("Checklist state parse error", e);
+                }
+            }
+
+            // Copy terminal workspace command block text
+            window.copyCode = function(btn) {
+                const rawCode = document.getElementById('terminal-raw-code').innerText;
+                navigator.clipboard.writeText(rawCode).then(() => {
+                    // Update button content with positive feedback
+                    btn.innerHTML = `<i data-lucide="check" style="width: 14px; height: 14px; color: var(--green);"></i> Copied!`;
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        btn.innerHTML = `<i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy Commands`;
+                        lucide.createIcons();
+                    }, 2000);
+                });
+            };
+
+            // Run Simulated Terminal Diagnostics command test
+            window.runSimulatedTerminal = function() {
+                const outputLog = document.getElementById('terminal-log-output');
+                outputLog.style.display = 'block';
+                outputLog.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+
+            // FAQ Accordion Open Close
+            window.toggleFaq = function(btn) {
+                const faqItem = btn.parentElement;
+                const isOpen = faqItem.classList.contains('open');
+                
+                // Close other opened panels
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('open');
+                });
+                
+                // Toggle clicked panel
+                if (!isOpen) {
+                    faqItem.classList.add('open');
+                }
+            };
+
+            // Intersection Observer to update active navigation links during scroll
+            const sections = document.querySelectorAll('header, section');
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.35
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+
+            // Theme Management Toggle Engine
+            const THEME_KEY = 'mern-setup-theme-preference';
+
+            function applyTheme(isLight) {
+                if (isLight) {
+                    bodyElement.classList.add('light-mode');
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                } else {
+                    bodyElement.classList.remove('light-mode');
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                }
+            }
+
+            // Toggle Click
+            themeBtn.addEventListener('click', () => {
+                const isCurrentlyLight = bodyElement.classList.contains('light-mode');
+                const newLightState = !isCurrentlyLight;
+                applyTheme(newLightState);
+                localStorage.setItem(THEME_KEY, newLightState ? 'light' : 'dark');
+            });
+
+            // Initialize theme preferences
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            if (savedTheme === 'light') {
+                applyTheme(true);
+            } else if (savedTheme === 'dark') {
+                applyTheme(false);
+            } else {
+                // Auto-detect system default dark preference
+                const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+                applyTheme(prefersLight);
+            }
+
+            // Confetti Particle Celebration Engine
+            const canvas = document.getElementById("confetti-canvas");
+            const ctx = canvas.getContext("2d");
+            let particles = [];
+            let animationFrameId = null;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class ConfettiParticle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * -100 - 20;
+                    this.size = Math.random() * 8 + 6;
+                    this.color = `hsl(${Math.random() * 360}, 85%, 60%)`;
+                    this.speedY = Math.random() * 3 + 4;
+                    this.speedX = Math.random() * 2 - 1;
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 4 - 2;
+                }
+                update() {
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    this.rotation += this.rotationSpeed;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation * Math.PI / 180);
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                    ctx.restore();
+                }
+            }
+
+            function triggerCelebration() {
+                // Only trigger if no current active particle cycle
+                if (particles.length > 0) return;
+                
+                particles = [];
+                for (let i = 0; i < 150; i++) {
+                    particles.push(new ConfettiParticle());
+                }
+                
+                cancelAnimationFrame(animationFrameId);
+                animateConfetti();
+            }
+
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+                
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                    if (p.y < canvas.height) alive = true;
+                });
+                
+                if (alive) {
+                    animationFrameId = requestAnimationFrame(animateConfetti);
+                } else {
+                    particles = [];
+                }
+            }
+
+            // Run initial local checklist loaders
+            loadProgress();
+            updateProgress();
+
+        </script>
+</body>
+</html>
