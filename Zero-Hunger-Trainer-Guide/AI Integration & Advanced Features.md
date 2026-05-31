@@ -9,7 +9,7 @@
 > 🔐 **The one rule for this entire module:** an AI API key is a **secret that costs money**. It lives in `.env` on your **server** and is used **only from the backend** — never in React, never in the browser, never committed to Git. Every example follows this rule.
 
 ---
-
+Link: https://www.tutorialspoint.com/chatgpt/chatgpt-build-a-chatbot.htm
 ## 🎯 Learning Objectives
 
 By the end of this module you will be able to:
